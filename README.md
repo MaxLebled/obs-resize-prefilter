@@ -6,7 +6,7 @@ It's clear as day when you try to resize by yourself using Photoshop, for exampl
 
 # My workaround
 
-A shader effect that "prefilters" the image to replicate what the result should be if the resize was a Catmull-Rom 50% downscale. **This works only for a 50% downscale, e.g. 4K to 1080p, because that's my use case.** (It shouldn't look "too wrong" for downscales that are close enough, but still.)
+A shader effect that "prefilters" the image to replicate what the result should be if the resize was a Catmull-Rom 50% downscale. **This works only for a 50% downscale, e.g. 4K to 1080p, because that's my use case.** (It shouldn't look "too wrong" for downscales that are close enough, but still.) It accounts for the unavoidable 2x2 box filter that OBS does when using the bilinear filter mode (so this is what your output res should be set to).
 
 This can be applied to any source (or a group of sources) using [obs-shaderfilter](https://github.com/exeldro/obs-shaderfilter).
 
@@ -30,7 +30,7 @@ Note the line discontinuities that show up in this case:
 
 ![Comparison](media/crop_comparison_bicubic_detail.gif) 
 
-Comparing all methods: 
+**Comparing all methods with a 2:1 ratio (3840x2160 → 1920x1080)** - you may wish to right click, open image in new tab.
 
 ![Crop comparison](media/crop_comparison.png) 
 
@@ -51,7 +51,7 @@ https://github.com/user-attachments/assets/c6577971-d522-4ea5-ad27-a26eb76e7dda
 
 Try playing this back in fullscreen, and note how, on the left, the image is much more "crawly", how the wooden fence has more aliasing, how the word "Placard" jitters... and how this is solved on the right.
 
-# Why?
+# Why is OBS doing this?
 
 I dug into the OBS source code, and if I'm reading it correctly... the core reason is that the kernels are all fixed-width, which is fine for upscaling, but breaks down when downscaling.
 
