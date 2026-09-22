@@ -63,6 +63,12 @@ Below a 50% ratio, OBS does... 8xMSAA style sampling. In the sense that it borro
 
 My understanding is that these 8 samples are mathematically fine until 33% (so, 4K to 720p), then it technically becomes worse again. But then again I don't think most people do more than a 3:1 downscale in OBS.
 
+### Area
+
+The "Area" downscale filter is the only one of the four that OBS provides which is correct, in the sense that its averaging window is the only one that actually scales with the ratio (resolution difference).
+
+At a ratio of 4:3 (2560x1440 → 1920x1080) it's averaging 1.33 source pixels together for 1 output pixel, which is correct. Unfortunately... it's stil a plain box average, and a box filter is the weakest possible filter even when it's done properly.
+
 # Contributing a fix to OBS
 
 I'm not doing that, simply because I'm not able to.
