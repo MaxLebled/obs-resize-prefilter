@@ -6,7 +6,7 @@ It's clear as day when you try to resize by yourself using Photoshop, for exampl
 
 # My workaround
 
-A shader effect that "prefilters" the image to replicate what the result should be if the resize was a Catmull-Rom 50% downscale. **This works only for a 50% downscale, e.g. 4K to 1080p, because that's my use case.** (It shouldn't look "too wrong" for downscales that are close enough, but still.) It accounts for the unavoidable 2x2 box filter that OBS does when using the bilinear filter mode (so this is what your output res should be set to).
+A shader effect that "prefilters" the image to replicate what the result should be if the resize was a Catmull-Rom 50% downscale. **This works only for a 50% downscale, e.g. 4K to 1080p, because that's my use case.** (It shouldn't look "too wrong" for downscales that are close enough, but still.) It accounts for the unavoidable 2x2 box filter that OBS does when using the bilinear filter mode — so this is what your "Downscale Filter" must be set to.
 
 This can be applied to any source (or a group of sources) using [obs-shaderfilter](https://github.com/exeldro/obs-shaderfilter).
 
