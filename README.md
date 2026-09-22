@@ -63,4 +63,10 @@ Below a 50% ratio, OBS does... 8xMSAA style sampling. In the sense that it borro
 
 My understanding is that these 8 samples are mathematically fine until 33% (so, 4K to 720p), then it technically becomes worse again. But then again I don't think most people do more than a 3:1 downscale in OBS.
 
+# Contributing a fix to OBS
 
+I'm not doing that, simply because I'm not able to.
+
+It should be clear from the code comments that I struggled my way through writing this single fixed-size kernel as it is, and quite frankly I have no idea how to even begin writing one that changes its window size dynamically, optimising its taps, etc.
+
+But you know, at least I've identified the issue and made a workaround for my use case... so I figured I might as well share it, seeing as this has been a problem in OBS for over a decade.
