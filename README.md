@@ -59,7 +59,7 @@ I dug into the OBS source code, and if I'm reading it correctly... the core reas
 
 Every downscale filter except "Area" uses a fixed-size averaging window. When you're downscaling, the averaging window has to get bigger the more you shrink. OBS never does that. So Bicubic and Lanczos never actually remove the fine detail that can't fit in the smaller image, and that detail comes back aliased as hell.
 
-Below a 50% ratio, OBS does... 8xMSAA style sampling. In the sense that it borrows MSAA's sample positions from DIrect3D, you know, that grid of points that's askew. That's in `libobs/data/bilinear_lowres_scale.effect`. In which case your choice of filter is completely discarded. That's in `libobs/obs-scene.c:766-767` and `libobs/obs-video.c:224-228`. Note that this kicks in _below_ 50%, not when _equal OR below_ 50%. So a 4K to 1080p downscale in OBS is truly the worst case scenario.
+Below a 50% ratio, OBS does... 8xMSAA style sampling. In the sense that it borrows MSAA's sample positions from Direct3D, you know, that grid of points that's askew. That's in `libobs/data/bilinear_lowres_scale.effect`. In which case your choice of filter is completely discarded. That's in `libobs/obs-scene.c:766-767` and `libobs/obs-video.c:224-228`. Note that this kicks in _below_ 50%, not when _equal OR below_ 50%. So a 4K to 1080p downscale in OBS is truly the worst case scenario.
 
 My understanding is that these 8 samples are mathematically fine until 33% (so, 4K to 720p), then it technically becomes worse again. But then again I don't think most people do more than a 3:1 downscale in OBS.
 
@@ -67,7 +67,7 @@ My understanding is that these 8 samples are mathematically fine until 33% (so, 
 
 The "Area" downscale filter is the only one of the four that OBS provides which is correct, in the sense that its averaging window is the only one that actually scales with the ratio (resolution difference).
 
-At a ratio of 4:3 (2560x1440 → 1920x1080) it's averaging 1.33 source pixels together for 1 output pixel, which is correct. Unfortunately... it's stil a plain box average, and a box filter is the weakest possible filter even when it's done properly.
+At a ratio of 4:3 (2560x1440 → 1920x1080) it's averaging 1.33 source pixels together for 1 output pixel, which is correct. Unfortunately... it's still a plain box average, and a box filter is the weakest possible filter even when it's done properly.
 
 # Contributing a fix to OBS
 
