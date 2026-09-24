@@ -1,7 +1,9 @@
 float3 tap(float2 uv)
 {
     float3 c = image.Sample(textureSampler, uv).rgb; // Sample...
-    return pow(c, 2.2); // ... and linearise using 2.2 gamma. not sRGB but close enough
+	return c * c;
+    // ... and almost-linearise using 2.0 gamma. Close enough to 2.2,
+	// c * c is a single fast multiply. While pow() is a slow log2 + exp2. 
 }
 
 float4 mainImage(VertData v_in) : TARGET // OBS entry point
@@ -71,18 +73,18 @@ float4 mainImage(VertData v_in) : TARGET // OBS entry point
               + wc * tap(uv + float2( dx2, dy2));
 
     // Now I have my 5 "final" horizontal pixels and I must collapse them vertically
-    float3 kernelresult = wc * r0 + wb * r1 + wa * r2 + wb * r3 + wc * r4;
+    float3 kernelResult = wc * r0 + wb * r1 + wa * r2 + wb * r3 + wc * r4;
 
     // Clamp minimum pixel value to zero otherwise it could become a NaN
-    kernelresult = max(kernelresult, 0.0); // the "max" operation means "the larger of these 2 values"
+    kernelResult = max(kernelResult, 0.0); // the "max" operation means "the larger of these 2 values"
 
-    // Un-linearise, we're going back to gamma space
-    kernelresult = pow(kernelresult, 1.0 / 2.2);
+    // Un-linearise (the 2.0 at the start), we're going back to gamma space
+    kernelResult = sqrt(kernelResult);
 
     // Pass alpha through unchanged (it'll still get the unavoidable box filter)
     float4 src = image.Sample(textureSampler, uv);
 
     // Finally clamp the whole image to 0-1 using "saturate" because
 	// the negative lobes can theoretically output numbers above 1
-    return float4(saturate(kernelresult), src.a);
+    return float4(saturate(kernelResult), src.a);
 }
